@@ -38,10 +38,7 @@ const mockTransactions = [
   { id: 4, type: 'deposit', description: 'Online sale refund', amount: 35.00, date: '2024-07-11' },
 ];
 
-/**
- * Main Banking Dashboard Application
- */
-const App = () => {
+const Dashboard = () => {
   // State for form inputs
   const [depositAmount, setDepositAmount] = useState('');
   const [sendAmount, setSendAmount] = useState('');
@@ -72,11 +69,11 @@ const App = () => {
   return (
     <Box sx={{ backgroundColor: '#f4f6f8', minHeight: '100vh' }}>
       {/* AppBar with Logout */}
-      <AppBar position="static" color="primary" elevation={1}>
+      <AppBar position="static" color="primary">
         <Toolbar>
           <AccountBalanceWalletIcon sx={{ mr: 2 }} />
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Donova Bank
+            Donova Bank Dashboard
           </Typography>
           <Typography sx={{ mr: 2 }}>
             Welcome, {mockUser.firstName}
@@ -91,9 +88,12 @@ const App = () => {
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={3}>
 
-          {/* Account Summary Panel */}
+          {/* Welcome Section */}
           <Grid item xs={12}>
-            <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
+              <Typography variant="h4" gutterBottom>
+                Welcome back, {mockUser.firstName}!
+              </Typography>
               <Typography variant="h6" color="text.secondary">
                 Total Balance
               </Typography>
@@ -108,8 +108,10 @@ const App = () => {
 
           {/* Deposit Panel */}
           <Grid item xs={12} md={6}>
-            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h6" gutterBottom>Deposit Funds</Typography>
+            <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
+              <Typography variant="h5" gutterBottom>
+                💰 Deposit Funds
+              </Typography>
               <Divider sx={{ mb: 2 }} />
               <Box component="form" onSubmit={handleDeposit} noValidate>
                 <TextField
@@ -122,8 +124,14 @@ const App = () => {
                   sx={{ mb: 2 }}
                   required
                 />
-                <Button type="submit" variant="contained" fullWidth startIcon={<AddCardIcon />}>
-                  Deposit
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  fullWidth 
+                  startIcon={<AddCardIcon />}
+                  sx={{ py: 1.5 }}
+                >
+                  Deposit Money
                 </Button>
               </Box>
             </Paper>
@@ -131,8 +139,10 @@ const App = () => {
 
           {/* Send Money Panel */}
           <Grid item xs={12} md={6}>
-            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h6" gutterBottom>Send Money</Typography>
+            <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
+              <Typography variant="h5" gutterBottom>
+                💸 Send Money
+              </Typography>
               <Divider sx={{ mb: 2 }} />
               <Box component="form" onSubmit={handleSendMoney} noValidate>
                 <TextField
@@ -153,7 +163,13 @@ const App = () => {
                   sx={{ mb: 2 }}
                   required
                 />
-                <Button type="submit" variant="contained" fullWidth startIcon={<SendIcon />}>
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  fullWidth 
+                  startIcon={<SendIcon />}
+                  sx={{ py: 1.5 }}
+                >
                   Send Money
                 </Button>
               </Box>
@@ -162,9 +178,11 @@ const App = () => {
 
           {/* Transaction History Panel */}
           <Grid item xs={12}>
-            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h6" gutterBottom>Transaction History</Typography>
-              <Divider sx={{ mb: 1 }} />
+            <Paper elevation={2} sx={{ p: 3 }}>
+              <Typography variant="h5" gutterBottom>
+                📊 Transaction History
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
               <List>
                 {mockTransactions.map((tx) => (
                   <ListItem key={tx.id} divider>
@@ -192,10 +210,26 @@ const App = () => {
             </Paper>
           </Grid>
 
+          {/* About Section */}
+          <Grid item xs={12}>
+            <Paper elevation={2} sx={{ p: 3 }}>
+              <Typography variant="h5" gutterBottom>
+                🏦 About Donova Bank
+              </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="body1" color="text.secondary">
+                Donova Bank is a secure, AI-powered digital banking platform. 
+                With features like instant transfers, smart wallets, and AI assistance, 
+                we bring the future of banking to your fingertips. Manage your account, 
+                explore features, and customize your banking experience.
+              </Typography>
+            </Paper>
+          </Grid>
+
         </Grid>
       </Container>
     </Box>
   );
 };
 
-export default App;
+export default Dashboard;
