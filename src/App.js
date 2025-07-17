@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -25,7 +24,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import SendIcon from '@mui/icons-material/Send';
 import AddCardIcon from '@mui/icons-material/AddCard';
 
-// --- Mock Data (replace with API calls) ---
+// --- Mock Data ---
 const mockUser = {
   firstName: 'Donova',
   accountNumber: 'ACC123456789',
@@ -38,15 +37,11 @@ const mockTransactions = [
   { id: 3, type: 'withdrawal', description: 'Groceries Store', amount: -85.25, date: '2024-07-12' },
   { id: 4, type: 'deposit', description: 'Online sale refund', amount: 35.00, date: '2024-07-11' },
 ];
-// --- End of Mock Data ---
-
 
 /**
- * Main Dashboard Component
- * This component is now a "dumb" component that just displays data.
- * It receives user data and a logout handler from its parent.
+ * Main Banking Dashboard Application
  */
-const Dashboard = ({ user, handleLogout }) => {
+const App = () => {
   // State for form inputs
   const [depositAmount, setDepositAmount] = useState('');
   const [sendAmount, setSendAmount] = useState('');
@@ -54,17 +49,24 @@ const Dashboard = ({ user, handleLogout }) => {
 
   const handleDeposit = (e) => {
     e.preventDefault();
-    // In a real app, you would call your API here
-    alert(`Deposited $${depositAmount}`);
-    setDepositAmount('');
+    if (depositAmount) {
+      alert(`Deposited $${depositAmount}`);
+      setDepositAmount('');
+    }
   };
 
   const handleSendMoney = (e) => {
     e.preventDefault();
-    // In a real app, you would call your API here
-    alert(`Sent $${sendAmount} to account ${recipientAccount}`);
-    setSendAmount('');
-    setRecipientAccount('');
+    if (sendAmount && recipientAccount) {
+      alert(`Sent $${sendAmount} to account ${recipientAccount}`);
+      setSendAmount('');
+      setRecipientAccount('');
+    }
+  };
+
+  const handleLogout = () => {
+    alert('Logout functionality - would redirect to login page');
+    console.log("User logged out.");
   };
 
   return (
@@ -77,7 +79,7 @@ const Dashboard = ({ user, handleLogout }) => {
             Donova Bank
           </Typography>
           <Typography sx={{ mr: 2 }}>
-            Welcome, {user?.firstName || 'Guest'}
+            Welcome, {mockUser.firstName}
           </Typography>
           <IconButton color="inherit" aria-label="Logout" onClick={handleLogout}>
             <LogoutIcon />
@@ -96,10 +98,10 @@ const Dashboard = ({ user, handleLogout }) => {
                 Total Balance
               </Typography>
               <Typography component="p" variant="h4" sx={{ fontWeight: 'bold', my: 1 }}>
-                ${user?.accountBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                ${mockUser.accountBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </Typography>
               <Typography color="text.secondary">
-                Account Number: {user?.accountNumber || 'N/A'}
+                Account Number: {mockUser.accountNumber}
               </Typography>
             </Paper>
           </Grid>
@@ -118,6 +120,7 @@ const Dashboard = ({ user, handleLogout }) => {
                   onChange={(e) => setDepositAmount(e.target.value)}
                   InputProps={{ startAdornment: <Typography sx={{ mr: 1 }}>$</Typography> }}
                   sx={{ mb: 2 }}
+                  required
                 />
                 <Button type="submit" variant="contained" fullWidth startIcon={<AddCardIcon />}>
                   Deposit
@@ -138,6 +141,7 @@ const Dashboard = ({ user, handleLogout }) => {
                   value={recipientAccount}
                   onChange={(e) => setRecipientAccount(e.target.value)}
                   sx={{ mb: 2 }}
+                  required
                 />
                 <TextField
                   label="Amount to Send"
@@ -147,6 +151,7 @@ const Dashboard = ({ user, handleLogout }) => {
                   onChange={(e) => setSendAmount(e.target.value)}
                   InputProps={{ startAdornment: <Typography sx={{ mr: 1 }}>$</Typography> }}
                   sx={{ mb: 2 }}
+                  required
                 />
                 <Button type="submit" variant="contained" fullWidth startIcon={<SendIcon />}>
                   Send Money
@@ -190,61 +195,6 @@ const Dashboard = ({ user, handleLogout }) => {
         </Grid>
       </Container>
     </Box>
-  );
-};
-
-
-/**
- * Parent Component (DashboardPage)
- * This component manages state and logic, like fetching user data and handling logout.
- * It passes the necessary data down to the Dashboard component.
- */
-const DashboardPage = () => {
-    const navigate = useNavigate();
-    // In a real app, user data would come from an API call after login
-    // or from a global state management library (like Context or Redux).
-    const [user, setUser] = useState(mockUser);
-
-    const handleLogout = () => {
-        // Clear user session (e.g., remove auth token from localStorage)
-        localStorage.removeItem('authToken');
-        console.log("User logged out.");
-        // Redirect to the login page
-        navigate('/login');
-    };
-
-    // You could have a useEffect here to fetch user data if it wasn't available
-    // useEffect(() => {
-    //   const fetchUserData = async () => {
-    //     // const data = await api.getUser();
-    //     // setUser(data);
-    //   };
-    //   fetchUserData();
-    // }, []);
-
-    if (!user) {
-        return <Typography>Loading...</Typography>; // Or a loading spinner
-    }
-
-    return <Dashboard user={user} handleLogout={handleLogout} />;
-};
-
-/**
- * App Component
- * This is the main entry point that includes the Router provider.
- * This fixes the "useNavigate() may be used only in the context of a <Router>" error.
- */
-const App = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        {/* A placeholder for the login page to make navigation work */}
-        <Route path="/login" element={<Typography variant="h4" align="center" sx={{mt: 5}}>Login Page</Typography>} />
-        
-        {/* The main route for the dashboard */}
-        <Route path="/" element={<DashboardPage />} />
-      </Routes>
-    </BrowserRouter>
   );
 };
 
